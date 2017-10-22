@@ -1,0 +1,37 @@
+server {
+	server_name book.example.com;
+	root /var/www/book.example.com;
+
+	index index.php;
+
+	location = /favicon.ico {
+		log_not_found off;
+		access_log off;
+	}
+
+	location = /robots.txt {
+		allow all;
+		log_not_found off;
+		access_log off;
+	}
+
+	location ~ /\. {
+		deny all;
+	}
+
+	location ~* /(?:uploads|files)/.*\.php$ {
+		deny all;
+	}
+
+	location / {
+		try_files $uri $uri/ /index.php?$args;
+	}
+
+	rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+
+	location ~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
+		access_log off;
+		log_not_found off;
+		expires max;
+	}
+
